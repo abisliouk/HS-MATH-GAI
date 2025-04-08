@@ -4,6 +4,13 @@ import time
 import os
 from pathlib import Path
 from uuid import uuid4
+import numpy as np
+from collections import defaultdict
+
+# Constants
+SELF_EVAL_CONFIDENCE = "self_eval_confidence"
+LOGIT_BASED_CONFIDENCE = "logit_based_confidence"
+INTERNAL_BASED_CONFIDENCE = "internal_based_confidence"
 
 # Configuration
 MODEL = "gpt-3.5-turbo"
@@ -91,9 +98,9 @@ Return only a JSON with the following fields and corresponding data types:
             "reasoning": parsed.get("reasoning", ""),
             "predicted_answer": predicted,
             "confidence": {
-                "self_eval_confidence": round(self_conf, 3),
-                "logit_based_confidence": round(logit_based, 3),
-                "internal_based_confidence": round(internal_conf, 3)
+                SELF_EVAL_CONFIDENCE: round(self_conf, 3),
+                LOGIT_BASED_CONFIDENCE: round(logit_based, 3),
+                INTERNAL_BASED_CONFIDENCE: round(internal_conf, 3)
             }
         },
         "raw_text": raw_response,
@@ -110,3 +117,51 @@ Return only a JSON with the following fields and corresponding data types:
 # Final save
 with open(OUTPUT_PATH, "w") as f:
     json.dump(results, f, indent=2)
+
+    
+
+# Confidence-accuracy evaluation
+
+# List of confidence fields to evaluate
+confidence_keys = [
+    (SELF_EVAL_CONFIDENCE, "confidence_accuracy_self_eval.json"),
+    (LOGIT_BASED_CONFIDENCE, "confidence_accuracy_logit.json"),
+    (INTERNAL_BASED_CONFIDENCE, "confidence_accuracy_internal.json")
+]
+
+bins = np.arange(0.0, 1.1, 0.1)
+
+for conf_key, output_file in confidence_keys:
+    bin_counts = defaultdict(int)
+    bin_correct = defaultdict(int)
+
+    for r in results:
+        conf = r["model_response"]["confidence"].get(conf_key, 0.0)
+        correct = r["model_response"]["predicted_answer"] in r["expected_answer"]
+
+        for i in range(len(bins) - 1):
+            if bins[i] <= conf < bins[i + 1] or (conf == 1.0 and bins[i + 1] == 1.0):
+                bin_key = f"{bins[i]:.1f}-{bins[i+1]:.1f}"
+                bin_counts[bin_key] += 1
+                bin_correct[bin_key] += int(correct)
+                break
+
+    # Build table
+    table = []
+    for bin_key in sorted(bin_counts.keys()):
+        total = bin_counts[bin_key]
+        correct = bin_correct[bin_key]
+        acc = correct / total if total > 0 else 0.0
+        table.append({
+            "confidence_bin": bin_key,
+            "num_samples": total,
+            "accuracy": round(acc, 3)
+        })
+
+    # Save table
+    output_path = f"outputs/{output_file}"
+    with open(output_path, "w") as f:
+        json.dump(table, f, indent=2)
+
+    print(f"✅ Saved {conf_key} confidence-accuracy table to: {output_path}")
+
