@@ -20,7 +20,7 @@ This project implements an automated pipeline for evaluating high school math re
 
 - The `scripts/` directory includes the main evaluation script `evaluate.py`. This script queries the OpenAI API to solve problems and compute multiple uncertainty quantification (UQ) scores.
 
-- The `outputs/` directory is used to store the evaluation results. Specifically, the file `eval_structured_with_uq_optimized.json` contains the model responses, predicted answers, and four types of UQ confidence scores for each evaluated math problem.
+- The `outputs/` directory is used to store the evaluation results. Specifically, the file `prediction_with_uncertainties.json` contains the model responses, predicted answers, and four types of UQ confidence scores for each evaluated math problem.
 
 - The `README.md` file you're reading now provides setup instructions, usage, and project documentation.
 
@@ -78,7 +78,7 @@ This will:
   - **Logit-based confidence**: Max softmax probability over A–D.
   - **Internal-based confidence**: Self-estimated based on reasoning coherence.
 - Save structured results to:
-  - `outputs/eval_structured_with_uq_optimized.json`
+  - `outputs/prediction_with_uncertainties.json`
 
 > ⏳ Evaluation may take several minutes depending on your OpenAI quota and the number of samples configured in the script.
 

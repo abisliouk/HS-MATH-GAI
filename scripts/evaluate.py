@@ -7,13 +7,10 @@ from uuid import uuid4
 
 # Configuration
 MODEL = "gpt-3.5-turbo"
-TEMPERATURE = 0.0
+NUM_SAMPLES = 3 # For processing only a few samples instead of the entire dataset
 INPUT_PATH = "data/math_translated_scored.json"
-OUTPUT_PATH = "outputs/eval_structured_responses.json"
-NUM_SAMPLES = 10
-SAVE_EVERY = 1
+OUTPUT_PATH = "outputs/prediction_with_uncertainties.json"
 
-# Create OpenAI client
 client = openai.OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 # Load dataset
@@ -24,60 +21,89 @@ results = []
 
 for idx, item in enumerate(dataset):
     prompt = f"""
-Solve the following high school math problem. Provide your step-by-step reasoning, final answer (one of the options: A, B, C or D), and a confidence estimate between 0 and 1.
+You are a careful math tutor. Solve the following high school math problem step-by-step.
+Then:
+1. Choose your final answer (A, B, C, or D).
+2. Estimate your self-confidence (how likely you think your answer is correct) ∈ [0.0, 1.0].
+3. Estimate your internal confidence (based on reasoning clarity and certainty) ∈ [0.0, 1.0].
+4. Provide your confidence distribution over choices A–D as JSON (e.g. {{"A": 0.25, "B": 0.25, "C": 0.25, "D": 0.25}}).
 
 Problem:
 {item['question_en']}
 
-Respond in JSON format like:
+Return only a JSON with the following fields:
 {{
   "reasoning": "...",
   "predicted_answer": "A",
-  "confidence": 0.92
+  "self_confidence": 0.93,
+  "internal_confidence": 0.91,
+  "confidence_distribution": {{
+    "A": 0.1, "B": 0.2, "C": 0.3, "D": 0.4
+  }}
 }}
 """
 
-    try:
-        response = client.chat.completions.create(
-            model=MODEL,
-            messages=[
-                {"role": "system", "content": "You are a careful math tutor. Answer in structured JSON format."},
-                {"role": "user", "content": prompt}
-            ],
-            temperature=TEMPERATURE
-        )
-
-        content = response.choices[0].message.content.strip()
+    def call_api(p):
         try:
-            structured = json.loads(content)
-        except Exception as parse_err:
-            structured = {
-                "reasoning": content,
-                "predicted_answer": None,
-                "confidence": None,
-                "parse_error": str(parse_err)
+            response = client.chat.completions.create(
+                model=MODEL,
+                messages=[
+                    {"role": "user", "content": p}
+                ],
+            )
+            return response.choices[0].message.content
+        except Exception as e:
+            print(f"[Error @ idx={idx}]: {e}")
+            return None
+
+    # Primary response
+    raw_response = call_api(prompt)
+    if not raw_response:
+        continue
+
+    try:
+        parsed = json.loads(raw_response)
+    except Exception as parse_err:
+        parsed = {
+            "reasoning": raw_response,
+            "predicted_answer": None,
+            "self_confidence": 0.0,
+            "internal_confidence": 0.0,
+            "confidence_distribution": {},
+            "parse_error": str(parse_err)
+        }
+
+    predicted = parsed.get("predicted_answer")
+    self_conf = float(parsed.get("self_confidence", 0.0))
+    internal_conf = float(parsed.get("internal_confidence", 0.0))
+    dist = parsed.get("confidence_distribution", {})
+    logit_based = max(dist.values()) if dist else 0.0
+
+    # Final output
+    results.append({
+        "id": item.get("id", str(uuid4())),
+        "question": item["question"],
+        "expected_answer": item["answer"],
+        "model_response": {
+            "reasoning": parsed.get("reasoning", ""),
+            "predicted_answer": predicted,
+            "confidence": {
+                "self_eval_confidence": round(self_conf, 3),
+                "logit_based_confidence": round(logit_based, 3),
+                "internal_based_confidence": round(internal_conf, 3)
             }
+        },
+        "raw_text": raw_response,
+        "timestamp": time.time()
+    })
 
-        results.append({
-            "id": item.get("id", str(uuid4())),
-            "question": item["question"],
-            "expected_answer": item["answer"],
-            "model_response": structured,
-            "raw_text": content,
-            "timestamp": time.time()
-        })
+    # Save after each step
+    Path(OUTPUT_PATH).parent.mkdir(parents=True, exist_ok=True)
+    with open(OUTPUT_PATH, "w") as f:
+        json.dump(results, f, indent=2)
 
-        if idx % SAVE_EVERY == 0 or idx == NUM_SAMPLES - 1:
-            Path(OUTPUT_PATH).parent.mkdir(parents=True, exist_ok=True)
-            with open(OUTPUT_PATH, "w") as f:
-                json.dump(results, f, indent=2)
-
-        time.sleep(1.0)
-
-    except Exception as e:
-        print(f"[Error @ idx={idx}]: {e}")
+    time.sleep(1.0)
 
 # Final save
-Path(OUTPUT_PATH).parent.mkdir(parents=True, exist_ok=True)
 with open(OUTPUT_PATH, "w") as f:
     json.dump(results, f, indent=2)
