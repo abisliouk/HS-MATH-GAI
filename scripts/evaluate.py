@@ -21,25 +21,28 @@ results = []
 
 for idx, item in enumerate(dataset):
     prompt = f"""
-You are a careful math tutor. Solve the following high school math problem step-by-step.
-Then:
-1. Choose your final answer (A, B, C, or D).
-2. Estimate your self-confidence (how likely you think your answer is correct) ∈ [0.0, 1.0].
-3. Estimate your internal confidence (based on reasoning clarity and certainty) ∈ [0.0, 1.0].
-4. Provide your confidence distribution over choices A–D as JSON (e.g. {{"A": 0.25, "B": 0.25, "C": 0.25, "D": 0.25}}).
+You are a careful math tutor. Solve the following high school math problem step-by-step providing the following:
+1. "reasoning" - Explain your solution step by step.
+2. "predicted_answer" - Choose your final answer (A, B, C, or D) based on your "reasoning".
+3. "self_confidence" - Estimate your self-confidence (how likely you think your answer is correct) ∈ [0.0, 1.0].
+4. "internal_confidence" - Estimate your internal confidence (based on reasoning clarity and certainty) ∈ [0.0, 1.0].
+5. "confidence_distribution" - Provide your confidence distribution over choices A–D as JSON (e.g. {{"A": 0.25, "B": 0.25, "C": 0.25, "D": 0.25}}).
 
 Problem:
 {item['question_en']}
 
-Return only a JSON with the following fields:
+Return only a JSON with the following fields and corresponding data types:
 {{
-  "reasoning": "...",
-  "predicted_answer": "A",
-  "self_confidence": 0.93,
-  "internal_confidence": 0.91,
+  "reasoning": string,
+  "predicted_answer": enum["A", "B", "C", "D"],
+  "self_confidence": float ∈ [0.0, 1.0],
+  "internal_confidence": float ∈ [0.0, 1.0],
   "confidence_distribution": {{
-    "A": 0.1, "B": 0.2, "C": 0.3, "D": 0.4
-  }}
+        "A": float ∈ [0.0, 1.0],
+        "B": float ∈ [0.0, 1.0],
+        "C": float ∈ [0.0, 1.0],
+        "D": float ∈ [0.0, 1.0]
+    }}
 }}
 """
 

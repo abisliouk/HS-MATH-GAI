@@ -37,7 +37,7 @@ This README documents the complete implementation workflow for **Member 3** in t
 
 #### 3. Use GPT-3.5 Turbo for All Evaluations
 - Optimize API usage:
-  - Reuse responses when possible (e.g., answer + confidence in one pass).
+  - Reuse responses when possible (e.g., answer + 2confidence in one pass).
   - Batch API calls, handle rate limits.
 
 #### 4. Confidence-Accuracy Curve Evaluation
