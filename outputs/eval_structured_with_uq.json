@@ -1,0 +1,192 @@
+[
+  {
+    "id": "a69ecbeb-0bff-4bc2-93e2-df110066da93",
+    "question": "1. \uff085 \u5206) \u5df2\u77e5\u96c6\u5408 $A=\\{x \\in R|| x \\mid \\leqslant 2\\}\\}, B=\\{x \\in Z \\mid \\sqrt{x} \\leqslant 4\\}$, \u5219 $A \\cap B=(\\quad$ \uff09\nA. $(0,2)$\nB. $[0,2]$\nC. $\\{0,2\\}$\nD. $\\{0,1,2\\}$\n",
+    "expected_answer": [
+      "D"
+    ],
+    "model_response": {
+      "reasoning": "For set A, x must be a real number such that x is less than or equal to 2. So, A = (-\u221e, 2]. For set B, x must be an integer such that the square root of x is less than or equal to 4. The only integers for which the square root is less than or equal to 4 are 0, 1, 2, 3, and 4. So, B = {0, 1, 2}. The intersection of sets A and B will be the common elements in both sets, which are {0, 1, 2}.",
+      "predicted_answer": "D",
+      "confidence": {
+        "self_eval_confidence": 0.0,
+        "consistency_based_confidence": 0.8,
+        "logit_based_confidence": 0.4,
+        "internal_based_confidence": 0.9
+      }
+    },
+    "raw_text": "{\n  \"reasoning\": \"For set A, x must be a real number such that x is less than or equal to 2. So, A = (-\u221e, 2]. For set B, x must be an integer such that the square root of x is less than or equal to 4. The only integers for which the square root is less than or equal to 4 are 0, 1, 2, 3, and 4. So, B = {0, 1, 2}. The intersection of sets A and B will be the common elements in both sets, which are {0, 1, 2}.\",\n  \"predicted_answer\": \"D\"\n}",
+    "timestamp": 1744139448.735567
+  },
+  {
+    "id": "6a89e5ef-fd47-4be3-b753-b45f20a10c72",
+    "question": "2. (5 \u5206) \u5df2\u77e5\u590d\u6570 $z=\\frac{\\sqrt{3}+i}{(1-\\sqrt{3} i)^{2}}, \\bar{z}$ \u662f $z$ \u7684\u5171\u8f6d\u590d\u6570, \u5219 $z\\cdot\bar{z}=(\\quad)$\nA. $\\frac{1}{4}$\nB. $\\frac{1}{2}$\nC. 1\nD. 2\n",
+    "expected_answer": [
+      "A"
+    ],
+    "model_response": {
+      "reasoning": "Let's first find the conjugate of z. Conjugate of a complex number a+bi is a-bi. So, the conjugate of z is (sqrt(3)-i) / (1+sqrt(3)i)^2. Next, multiply z by its conjugate to get z*conjugate(z). After simplifying the expression, we find z*conjugate(z) = 1.",
+      "predicted_answer": "C",
+      "confidence": {
+        "self_eval_confidence": 0.9,
+        "consistency_based_confidence": 0.6,
+        "logit_based_confidence": 0.6,
+        "internal_based_confidence": 0.9
+      }
+    },
+    "raw_text": "{\n  \"reasoning\": \"Let's first find the conjugate of z. Conjugate of a complex number a+bi is a-bi. So, the conjugate of z is (sqrt(3)-i) / (1+sqrt(3)i)^2. Next, multiply z by its conjugate to get z*conjugate(z). After simplifying the expression, we find z*conjugate(z) = 1.\",\n  \"predicted_answer\": \"C\"\n}",
+    "timestamp": 1744139462.454839
+  },
+  {
+    "id": "8cd1eed8-b62f-48fb-93cb-3839d24bc10d",
+    "question": "3. (5 \u5206) \u66f2\u7ebf $y=\\frac{x}{x+2}$ \u5728\u70b9 $(-1,-1)$ \u5904\u7684\u5207\u7ebf\u65b9\u7a0b\u4e3a\uff08 $\uff09$\nA. $y=2 x+1$\nB. $y=2 x-1$\nC. $y=-2 x-3$\nD. $y=-2 x-2$\n",
+    "expected_answer": [
+      "A"
+    ],
+    "model_response": {
+      "reasoning": "To find the equation of the tangent line at a point on a curve, we need to find the derivative of the curve at that point. The derivative of y = x/(x+2) is y' = 2/(x+2)^2. Plugging x = -1 into y' gives us the slope of the tangent line at (-1, -1) as 2. Therefore, the equation of the tangent line is y = 2x + b. Plugging in (-1, -1) gives us -1 = -2 + b, so b = 1. Thus, the equation of the tangent line is y = 2x + 1.",
+      "predicted_answer": "A",
+      "confidence": {
+        "self_eval_confidence": 0.0,
+        "consistency_based_confidence": 1.0,
+        "logit_based_confidence": 0.9,
+        "internal_based_confidence": 0.8
+      }
+    },
+    "raw_text": "{\n  \"reasoning\": \"To find the equation of the tangent line at a point on a curve, we need to find the derivative of the curve at that point. The derivative of y = x/(x+2) is y' = 2/(x+2)^2. Plugging x = -1 into y' gives us the slope of the tangent line at (-1, -1) as 2. Therefore, the equation of the tangent line is y = 2x + b. Plugging in (-1, -1) gives us -1 = -2 + b, so b = 1. Thus, the equation of the tangent line is y = 2x + 1.\",\n  \"predicted_answer\": \"A\"\n}",
+    "timestamp": 1744139477.582368
+  },
+  {
+    "id": "51f94e28-af73-479f-b95e-d3af7cd8dfce",
+    "question": "5. \uff085 \u5206) \u5df2\u77e5\u547d\u9898 $p_{1}$ : \u51fd\u6570 $y=2^{x}-2^{-x}$ \u5728 $R$ \u4e3a\u589e\u51fd\u6570, $p_{2}$ : \u51fd\u6570 $y=2^{x}+2^{-x}$ \u5728 $R$ \u4e3a\u51cf\u51fd\u6570, \u5219\u5728\u547d\u9898 $q_{1}: p_{1} \\vee p_{2}, q_{2}: p_{1} \\wedge p_{2}, q_{3}:\\left(\\neg p_{1}\\right) \\vee p_{2}$ \u548c $q_{4}: p_{1} \\wedge(\\square$ $\\left.p_{2}\\right)$ \u4e2d\uff0c\u771f\u547d\u9898\u662f\uff08 $)$ \nA. $q_{1}, q_{3}$\nB. $q_{2}, q_{3}$\nC. $q_{1}, q_{4}$\nD. $q_{2}, q_{4}$\n",
+    "expected_answer": [
+      "C"
+    ],
+    "model_response": {
+      "reasoning": "p1: Function y=2^x - 2^(-x) is always increasing in the domain of real numbers. p2: Function y=2^x + 2^(-x) is always increasing in the domain of real numbers. q1: Either p1 or p2 is true, which means the function is always increasing. q2: Both p1 and p2 are true, which means the function is always increasing. q3: Either p1 is false or p2 is true, which is always increasing. q4: p1 is true and p2 is always increasing. Therefore, the correct answer is A.",
+      "predicted_answer": "A",
+      "confidence": {
+        "self_eval_confidence": 0.9,
+        "consistency_based_confidence": 1.0,
+        "logit_based_confidence": 0.25,
+        "internal_based_confidence": 0.9
+      }
+    },
+    "raw_text": "{\n  \"reasoning\": \"p1: Function y=2^x - 2^(-x) is always increasing in the domain of real numbers. p2: Function y=2^x + 2^(-x) is always increasing in the domain of real numbers. q1: Either p1 or p2 is true, which means the function is always increasing. q2: Both p1 and p2 are true, which means the function is always increasing. q3: Either p1 is false or p2 is true, which is always increasing. q4: p1 is true and p2 is always increasing. Therefore, the correct answer is A.\",\n  \"predicted_answer\": \"A\"\n}",
+    "timestamp": 1744139495.205267
+  },
+  {
+    "id": "6c3b6cdf-20f4-4404-bd37-33a830c8de18",
+    "question": "6. \uff085 \u5206) \u67d0\u79cd\u79cd\u5b50\u6bcf\u7c92\u53d1\u82bd\u7684\u6982\u7387\u90fd\u4e3a 0.9 , \u73b0\u64ad\u79cd\u4e86 1000 \u7c92, \u5bf9\u4e8e\u6ca1\u6709\u53d1 \u82bd\u7684\u79cd\u5b50, \u6bcf\u7c92\u9700\u518d\u8865\u79cd 2 \u7c92, \u8865\u79cd\u7684\u79cd\u5b50\u6570\u8bb0\u4e3a $X$, \u5219 $X$ \u7684\u6570\u5b66\u671f\u671b\u4e3a $(\\quad)$\nA. 100\nB. 200\nC. 300\nD. 400\n",
+    "expected_answer": [
+      "B"
+    ],
+    "model_response": {
+      "reasoning": "Out of 1,000 seeds, the expected number of seeds that will not germinate is 0.1 * 1000 = 100. For each of these seeds, 2 more seeds need to be replanted. So, the total number of seeds for replanting is 100 * 2 = 200. Therefore, the mathematical expectation is 200.",
+      "predicted_answer": "B",
+      "confidence": {
+        "self_eval_confidence": 0.9,
+        "consistency_based_confidence": 1.0,
+        "logit_based_confidence": 0.4,
+        "internal_based_confidence": 0.9
+      }
+    },
+    "raw_text": "{\n  \"reasoning\": \"Out of 1,000 seeds, the expected number of seeds that will not germinate is 0.1 * 1000 = 100. For each of these seeds, 2 more seeds need to be replanted. So, the total number of seeds for replanting is 100 * 2 = 200. Therefore, the mathematical expectation is 200.\",\n  \"predicted_answer\": \"B\"\n}",
+    "timestamp": 1744139507.203861
+  },
+  {
+    "id": "d245354e-dad6-4507-b2aa-ba6714dbf153",
+    "question": "8. \uff085 \u5206\uff09\u8bbe\u5076\u51fd\u6570 $f(x)$ \u6ee1\u8db3 $f(x)=2^{x}-4(x \\geqslant 0)$ \uff0c\u5219 $\\{x \\mid f(x-2)>0\\}=($ )\nA. $\\{x \\mid x<-2$ \u6216 $x>4\\}$\nB. $\\{x \\mid x<0$ \u6216 $x>4\\}$\nC. $\\{x \\mid x<0$ \u6216 $x>6\\}$\nD. $\\{x \\mid x<-2$ \u6216 $x>2\\}$\n",
+    "expected_answer": [
+      "B"
+    ],
+    "model_response": {
+      "reasoning": "To find the values of x for which f(x-2) > 0, we substitute x-2 into the function f(x) = 2^x - 4 for f(x-2). Therefore, f(x-2) = 2^(x-2) - 4. We want to solve for x when f(x-2) > 0, which means 2^(x-2) - 4 > 0. Solving this inequality gives x > 2. Thus, the correct answer is {x | x > 2}, which corresponds to option D.",
+      "predicted_answer": "D",
+      "confidence": {
+        "self_eval_confidence": 0.0,
+        "consistency_based_confidence": 0.667,
+        "logit_based_confidence": 0.0,
+        "internal_based_confidence": 0.9
+      }
+    },
+    "raw_text": "{\n  \"reasoning\": \"To find the values of x for which f(x-2) > 0, we substitute x-2 into the function f(x) = 2^x - 4 for f(x-2). Therefore, f(x-2) = 2^(x-2) - 4. We want to solve for x when f(x-2) > 0, which means 2^(x-2) - 4 > 0. Solving this inequality gives x > 2. Thus, the correct answer is {x | x > 2}, which corresponds to option D.\",\n  \"predicted_answer\": \"D\"\n}",
+    "timestamp": 1744139523.83322
+  },
+  {
+    "id": "4b86cb97-e08c-4405-9603-254b59a1d00f",
+    "question": "9. (5 \u5206\uff09\u82e5 $\\cos \\alpha=-\\frac{4}{5}, \\alpha$ \u662f\u7b2c\u4e09\u8c61\u9650\u7684\u89d2, \u5219 $\\frac{1+\\tan \\frac{\\alpha}{2}}{1-\\tan \\frac{\\alpha}{2}}=(\\quad)$\nA. $-\\frac{1}{2}$\nB. $\\frac{1}{2}$\nC. 2\nD. -2\n",
+    "expected_answer": [
+      "A"
+    ],
+    "model_response": {
+      "reasoning": "Given that cosine of alpha is -4/5 and alpha is in the third quadrant, we can determine that sine of alpha is -3/5 using the Pythagorean identity. Next, we use the half-angle formula for tangent to find that tan(alpha/2) = -1/3. Substituting into the given expression, we get (1+(-1/3))/(1-(-1/3)) = (2/3) / (4/3) = 1/2. Therefore, the final answer is B. 1/2.",
+      "predicted_answer": "B",
+      "confidence": {
+        "self_eval_confidence": 0.9,
+        "consistency_based_confidence": 0.4,
+        "logit_based_confidence": 0.8,
+        "internal_based_confidence": 0.9
+      }
+    },
+    "raw_text": "{\n  \"reasoning\": \"Given that cosine of alpha is -4/5 and alpha is in the third quadrant, we can determine that sine of alpha is -3/5 using the Pythagorean identity. Next, we use the half-angle formula for tangent to find that tan(alpha/2) = -1/3. Substituting into the given expression, we get (1+(-1/3))/(1-(-1/3)) = (2/3) / (4/3) = 1/2. Therefore, the final answer is B. 1/2.\",\n  \"predicted_answer\": \"B\"\n}",
+    "timestamp": 1744139535.463457
+  },
+  {
+    "id": "34a58431-388c-4a94-9ea1-96f2e8e54169",
+    "question": "10. (5 \u5206) \u8bbe\u4e09\u68f1\u67f1\u7684\u4fa7\u68f1\u5782\u76f4\u4e8e\u5e95\u9762, \u6240\u6709\u68f1\u957f\u90fd\u4e3a $a$, \u9876\u70b9\u90fd\u5728\u4e00\u4e2a\u7403\u9762 \u4e0a, \u5219\u8be5\u7403\u7684\u8868\u9762\u79ef\u4e3a\uff08\uff09\nA. $\\pi a^{2}$\nB. $\\frac{7}{3} \\pi a^{2}$\nC. $\\frac{11}{3} \\pi a^{2}$\nD. $5 \\pi a^{2}$\n",
+    "expected_answer": [
+      "B"
+    ],
+    "model_response": {
+      "reasoning": "{\n  \"reasoning\": \"The surface area of a sphere is given by the formula $4\\pi r^2$, where $r$ is the radius of the sphere. In this case, each vertex of the triangular prism lies on the spherical surface, so the radius $r$ is equal to the length of the side edge $a$. Therefore, the surface area of the sphere is $4\\pi a^2$. Since the surface area of the sphere is the same as the sum of the areas of the three faces of the prism (two triangular faces and one rectangular face), the total surface area of the prism is $4\\pi a^2$. The answer is therefore A.\",\n  \"predicted_answer\": \"A\"\n}",
+      "predicted_answer": null,
+      "confidence": {
+        "self_eval_confidence": 0.9,
+        "consistency_based_confidence": 0.0,
+        "logit_based_confidence": 0.9,
+        "internal_based_confidence": 0.8
+      }
+    },
+    "raw_text": "{\n  \"reasoning\": \"The surface area of a sphere is given by the formula $4\\pi r^2$, where $r$ is the radius of the sphere. In this case, each vertex of the triangular prism lies on the spherical surface, so the radius $r$ is equal to the length of the side edge $a$. Therefore, the surface area of the sphere is $4\\pi a^2$. Since the surface area of the sphere is the same as the sum of the areas of the three faces of the prism (two triangular faces and one rectangular face), the total surface area of the prism is $4\\pi a^2$. The answer is therefore A.\",\n  \"predicted_answer\": \"A\"\n}",
+    "timestamp": 1744139548.836292
+  },
+  {
+    "id": "bdbbebf5-160d-4415-9576-587c71015181",
+    "question": "12. (5 \u5206) \u5df2\u77e5\u53cc\u66f2\u7ebf $E$ \u7684\u4e2d\u5fc3\u4e3a\u539f\u70b9, $P(3,0)$ \u662f $E$ \u7684\u7126\u70b9, \u8fc7 $P$ \u7684\u76f4\u7ebf I \u4e0e $E$ \u76f8\u4ea4\u4e8e $A, B$ \u4e24\u70b9, \u4e14 $A B$ \u7684\u4e2d\u70b9\u4e3a $N(-12,-15)$, \u5219 $E$ \u7684\u65b9\u7a0b\u5f0f\u4e3a\uff08 )\nA. $\\frac{x^{2}}{3}-\\frac{y^{2}}{6}=1$\nB. $\\frac{x^{2}}{4}-\\frac{y^{2}}{5}=1$\nC. $\\frac{x^{2}}{6}-\\frac{y^{2}}{3}=1$\nD. $\\frac{x^{2}}{5}-\\frac{y^{2}}{4}=1$\n",
+    "expected_answer": [
+      "B"
+    ],
+    "model_response": {
+      "reasoning": "The equation of a hyperbola centered at point E with focus at point P is of the form $\\frac{x^{2}}{a^{2}} - \\frac{y^{2}}{b^{2}} = 1$, where $a$ is the distance from center to vertex and $c$ is the distance from center to focus. Given that $P(3,0)$ is the focus, we can calculate $a$ by finding the distance between $P$ and $N(-12,-15)$. The distance between $P$ and $N$ is the distance between the focus and the midpoint of the conjugate axis, which is $2a$. So, $2a = \\sqrt{(3+12)^{2} + (0+15)^{2}} = \\sqrt{225 + 225} = \\sqrt{450} = 15$, which gives $a = 7.5$. Then, we can find $c$ by using the distance formula between $P$ and $E$: $c = \\sqrt{(3-0)^{2} + (0-0)^{2}} = 3$. Now, we have $a = 7.5$ and $c = 3$, from which we can find $b$ using the relationship $a^{2} + b^{2} = c^{2}$, giving $b = \\sqrt{7.5^{2} - 3^{2}} = \\sqrt{56.25 - 9} = \\sqrt{47.25}$. Therefore, the equation of the hyperbola is $\\frac{x^{2}}{7.5^{2}} - \\frac{y^{2}}{\\sqrt{47.25}^{2}} = 1$, simplifying to $\\frac{x^{2}}{56.25} - \\frac{y^{2}}{47.25} = 1$, which matches option A.",
+      "predicted_answer": "A",
+      "confidence": {
+        "self_eval_confidence": 0.9,
+        "consistency_based_confidence": 1.0,
+        "logit_based_confidence": 0.25,
+        "internal_based_confidence": 0.9
+      }
+    },
+    "raw_text": "{\n  \"reasoning\": \"The equation of a hyperbola centered at point E with focus at point P is of the form $\\\\frac{x^{2}}{a^{2}} - \\\\frac{y^{2}}{b^{2}} = 1$, where $a$ is the distance from center to vertex and $c$ is the distance from center to focus. Given that $P(3,0)$ is the focus, we can calculate $a$ by finding the distance between $P$ and $N(-12,-15)$. The distance between $P$ and $N$ is the distance between the focus and the midpoint of the conjugate axis, which is $2a$. So, $2a = \\\\sqrt{(3+12)^{2} + (0+15)^{2}} = \\\\sqrt{225 + 225} = \\\\sqrt{450} = 15$, which gives $a = 7.5$. Then, we can find $c$ by using the distance formula between $P$ and $E$: $c = \\\\sqrt{(3-0)^{2} + (0-0)^{2}} = 3$. Now, we have $a = 7.5$ and $c = 3$, from which we can find $b$ using the relationship $a^{2} + b^{2} = c^{2}$, giving $b = \\\\sqrt{7.5^{2} - 3^{2}} = \\\\sqrt{56.25 - 9} = \\\\sqrt{47.25}$. Therefore, the equation of the hyperbola is $\\\\frac{x^{2}}{7.5^{2}} - \\\\frac{y^{2}}{\\\\sqrt{47.25}^{2}} = 1$, simplifying to $\\\\frac{x^{2}}{56.25} - \\\\frac{y^{2}}{47.25} = 1$, which matches option A.\",\n  \"predicted_answer\": \"A\"\n}",
+    "timestamp": 1744139571.103564
+  },
+  {
+    "id": "1f79411e-ddbe-4205-be08-7f3e96837718",
+    "question": "1. (5 \u5206) \u590d\u6570 $\\frac{2+i}{1-2 i}$ \u7684\u5171\u8f6d\u590d\u6570\u662f $(\\quad)$\nA. $-\\frac{3}{5} i$\nB. $\\frac{3}{5} i$\nC. $-\\mathrm{i}$\nD. i\n",
+    "expected_answer": [
+      "C"
+    ],
+    "model_response": {
+      "reasoning": "To find the conjugate of a complex number, we simply change the sign of the imaginary part. The conjugate of a complex number in the form a+bi is a-bi. Given the complex number 2+i, its conjugate is 2-i. Similarly, the conjugate of 1-2i is 1+2i. Therefore, the conjugate of the given expression is (2+i) / (1+2i). Multiplying the numerator and denominator by the conjugate of the denominator to rationalize the expression, we get ((2+i)(1+2i)) / ((1-2i)(1+2i)) = (2 + 4i + i - 2) / (1 - 4i^2) = (0 + 5i) / (1 + 4) = 5i / 5 = i.",
+      "predicted_answer": "D",
+      "confidence": {
+        "self_eval_confidence": 0.0,
+        "consistency_based_confidence": 1.0,
+        "logit_based_confidence": 0.25,
+        "internal_based_confidence": 0.9
+      }
+    },
+    "raw_text": "{\n  \"reasoning\": \"To find the conjugate of a complex number, we simply change the sign of the imaginary part. The conjugate of a complex number in the form a+bi is a-bi. Given the complex number 2+i, its conjugate is 2-i. Similarly, the conjugate of 1-2i is 1+2i. Therefore, the conjugate of the given expression is (2+i) / (1+2i). Multiplying the numerator and denominator by the conjugate of the denominator to rationalize the expression, we get ((2+i)(1+2i)) / ((1-2i)(1+2i)) = (2 + 4i + i - 2) / (1 - 4i^2) = (0 + 5i) / (1 + 4) = 5i / 5 = i.\",\n  \"predicted_answer\": \"D\"\n}",
+    "timestamp": 1744139585.8962991
+  }
+]
