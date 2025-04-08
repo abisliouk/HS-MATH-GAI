@@ -8,40 +8,50 @@ from statistics import mode
 
 # Configuration
 MODEL = "gpt-3.5-turbo"
-TEMPERATURE = 0.7
+TEMPERATURE = 0.5
 NUM_SAMPLES = 5
 CONSISTENCY_SAMPLES = 5
 INPUT_PATH = "data/math_translated_scored.json"
-OUTPUT_PATH = "outputs/eval_structured_with_uq.json"
+OUTPUT_PATH = "outputs/eval_structured_with_uq_optimized.json"
 
 client = openai.OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
+# Load dataset
 with open(INPUT_PATH, "r") as f:
     dataset = json.load(f)[:NUM_SAMPLES]
 
 results = []
 
 for idx, item in enumerate(dataset):
-    base_prompt = f"""
-Solve the following high school math problem. Provide step-by-step reasoning and final answer (only A, B, C, or D).
+    prompt = f"""
+You are a careful math tutor. Solve the following high school math problem step-by-step.
+Then:
+1. Choose your final answer (A, B, C, or D).
+2. Estimate your **self-confidence** (how likely you think your answer is correct) ∈ [0.0, 1.0].
+3. Estimate your **internal confidence** (Use internal states (e.g., hidden activations, attention heads) to estimate confidence or uncertainty.) ∈ [0.0, 1.0].
+4. Provide your **confidence distribution** over choices A–D as JSON (e.g. {{"A": 0.25, "B": 0.25, "C": 0.25, "D": 0.25}}).
 
 Problem:
 {item['question_en']}
 
-Respond ONLY in JSON format like:
+Return only a JSON with the following fields:
 {{
   "reasoning": "...",
-  "predicted_answer": "A"
+  "predicted_answer": "A",
+  "self_confidence": 0.93,
+  "internal_confidence": 0.91,
+  "confidence_distribution": {{
+    "A": 0.1, "B": 0.2, "C": 0.3, "D": 0.4
+  }}
 }}
 """
 
-    def get_response(prompt):
+    def call_api(p):
         try:
             response = client.chat.completions.create(
                 model=MODEL,
                 messages=[
-                    {"role": "system", "content": "You are a careful math tutor. Return JSON only."},
-                    {"role": "user", "content": prompt}
+                    {"role": "user", "content": p}
                 ],
                 temperature=TEMPERATURE
             )
@@ -50,75 +60,38 @@ Respond ONLY in JSON format like:
             print(f"[Error @ idx={idx}]: {e}")
             return None
 
-    # Main response
-    content = get_response(base_prompt)
-    if not content:
+    # Primary response
+    raw_response = call_api(prompt)
+    if not raw_response:
         continue
 
     try:
-        parsed = json.loads(content)
+        parsed = json.loads(raw_response)
     except Exception as parse_err:
         parsed = {
-            "reasoning": content,
+            "reasoning": raw_response,
             "predicted_answer": None,
+            "self_confidence": 0.0,
+            "internal_confidence": 0.0,
+            "confidence_distribution": {},
             "parse_error": str(parse_err)
         }
 
     predicted = parsed.get("predicted_answer")
+    self_conf = float(parsed.get("self_confidence", 0.0))
+    internal_conf = float(parsed.get("internal_confidence", 0.0))
+    dist = parsed.get("confidence_distribution", {})
+    logit_based = max(dist.values()) if dist else 0.0
 
-    # Self-confidence prompt
-    self_eval_prompt = f"""
-Given your previous answer to this problem:
-
-{item['question_en']}
-
-How confident are you in your final answer on a scale from 0.0 to 1.0? Only return a float.
-"""
-    try:
-        self_conf_raw = get_response(self_eval_prompt)
-        self_conf = float(self_conf_raw.strip())
-    except:
-        self_conf = 0.0
-
-    # Logit-based confidence prompt (Softmax entropy estimate)
-    logit_prompt = f"""
-Estimate your confidence distribution (Softmax probability) over the answer options A, B, C, and D for the following question:
-
-{item['question_en']}
-
-Return JSON like:
-{{"A": 0.1, "B": 0.2, "C": 0.3, "D": 0.4}}
-"""
-    try:
-        logit_dist_text = get_response(logit_prompt)
-        logit_dist = json.loads(logit_dist_text)
-        logit_based = max(logit_dist.values())
-    except:
-        logit_based = 0.0
-
-    # Internal-based confidence prompt
-    internal_prompt = f"""
-For the math problem below, estimate your internal certainty (based on your reasoning clarity and internal consistency) as a float from 0.0 to 1.0:
-
-{item['question_en']}
-
-Return only a float.
-"""
-    try:
-        internal_raw = get_response(internal_prompt)
-        internal_conf = float(internal_raw.strip())
-    except:
-        internal_conf = 0.0
-
-    # Consistency-based confidence
+    # Consistency-based UQ
     answers = []
     for _ in range(CONSISTENCY_SAMPLES):
-        sample_text = get_response(base_prompt)
+        retry_raw = call_api(prompt)
         try:
-            parsed_sample = json.loads(sample_text)
-            answer = parsed_sample.get("predicted_answer")
-            if answer:
-                answers.append(answer)
+            retry_parsed = json.loads(retry_raw)
+            ans = retry_parsed.get("predicted_answer")
+            if ans:
+                answers.append(ans)
         except:
             continue
 
@@ -131,6 +104,7 @@ Return only a float.
     else:
         agreement_ratio = 0.0
 
+    # Final output
     results.append({
         "id": item.get("id", str(uuid4())),
         "question": item["question"],
@@ -145,15 +119,17 @@ Return only a float.
                 "internal_based_confidence": round(internal_conf, 3)
             }
         },
-        "raw_text": content,
+        "raw_text": raw_response,
         "timestamp": time.time()
     })
 
+    # Save after each step
     Path(OUTPUT_PATH).parent.mkdir(parents=True, exist_ok=True)
     with open(OUTPUT_PATH, "w") as f:
         json.dump(results, f, indent=2)
 
-    time.sleep(1.2)
+    time.sleep(1.0)
 
+# Final save
 with open(OUTPUT_PATH, "w") as f:
     json.dump(results, f, indent=2)
