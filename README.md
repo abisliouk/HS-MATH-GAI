@@ -70,21 +70,54 @@ Then, set the key in your terminal session using:
 export OPENAI_API_KEY="sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
 ```
 
-This will:
-- Load problems from `data/math_translated_scored.json`.
-- Send each question to GPT-3.5 Turbo using structured prompts.
-- Collect predictions, reasoning, and four types of uncertainty:
-  - **Self-evaluation confidence**: Model's own declared certainty.
-  - **Logit-based confidence**: Max softmax probability over A–D.
-  - **Internal-based confidence**: Self-estimated based on reasoning coherence.
-- Save structured results to:
-  - `outputs/prediction_with_uncertainties.json`
+### 4. 🧪 Usage
 
-> ⏳ Evaluation may take several minutes depending on your OpenAI quota and the number of samples configured in the script.
+To run the uncertainty-aware math problem evaluation:
+
+```bash
+python scripts/evaluate.py
+```
+
+This will:
+
+- Load `data/math_translated_scored.json`.
+- For each of the first `NUM_SAMPLES` math problems:
+  - Prompt GPT-3.5 to:
+    - Solve the problem.
+    - Output structured reasoning, predicted answer, and 3 uncertainty scores:
+      - `self_confidence`
+      - `internal_confidence`
+      - `confidence_distribution` → used to compute `logit_based_confidence`
+  - Store full results in `outputs/prediction_with_uncertainties.json`.
+
+---
+
+### 📊 Confidence-Accuracy Table (Calibration)
+
+After evaluation, the script automatically builds **calibration tables** to quantify how reliable each confidence type is.
+
+These tables are saved to:
+
+- `outputs/confidence_accuracy_self_eval.json`
+- `outputs/confidence_accuracy_logit.json`
+- `outputs/confidence_accuracy_internal.json`
+
+Each file includes:
+
+```json
+[
+  {
+    "confidence_bin": "0.5-0.6",
+    "num_samples": 3,
+    "accuracy": 0.667
+  },
+  ...
+]
+```
 
 
 ### 📊 Output Format
-```bash
+```json
 {
   "id": "...",
   "question": "...",
