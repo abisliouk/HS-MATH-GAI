@@ -1,6 +1,6 @@
 [
   {
-    "confidence_bin": "0.8-0.9",
+    "confidence_bin": "0.0-0.1",
     "num_samples": 1,
     "accuracy": 0.0
   },

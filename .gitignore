@@ -1,4 +1,5 @@
 api_key.txt
+scripts/const.py
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

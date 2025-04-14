@@ -7,6 +7,8 @@ from uuid import uuid4
 import numpy as np
 from collections import defaultdict
 
+from const import PREMIUM_API_KEY
+
 # Constants
 SELF_EVAL_CONFIDENCE = "self_eval_confidence"
 LOGIT_BASED_CONFIDENCE = "logit_based_confidence"
@@ -18,7 +20,7 @@ NUM_SAMPLES = 3 # For processing only a few samples instead of the entire datase
 INPUT_PATH = "data/math_translated_scored.json"
 OUTPUT_PATH = "outputs/prediction_with_uncertainties.json"
 
-client = openai.OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+client = openai.OpenAI(api_key=PREMIUM_API_KEY)
 
 # Load dataset
 with open(INPUT_PATH, "r") as f:
