@@ -15,12 +15,13 @@ LOGIT_BASED_CONFIDENCE = "logit_based_confidence"
 INTERNAL_BASED_CONFIDENCE = "internal_based_confidence"
 
 # Configuration
-MODEL = "gpt-3.5-turbo"
+MODEL_FREE = "gpt-3.5-turbo"
+MODEL_LOCAL = "Qwen-7B-Chat"
 NUM_SAMPLES = 3 # For processing only a few samples instead of the entire dataset
 INPUT_PATH = "data/math_translated_scored.json"
 OUTPUT_PATH = "outputs/prediction_with_uncertainties.json"
 
-client = openai.OpenAI(api_key=PREMIUM_API_KEY)
+client = openai.OpenAI(api_key=PREMIUM_API_KEY, base_url="http://10.227.119.44:8000/v1")
 
 # Load dataset
 with open(INPUT_PATH, "r") as f:
@@ -32,7 +33,7 @@ for idx, item in enumerate(dataset):
     prompt = f"""
 You are a careful math tutor. Solve the following high school math problem step-by-step providing the following:
 1. "reasoning" - Explain your solution step by step.
-2. "predicted_answer" - Choose your final answer (A, B, C, or D) based on your "reasoning".
+2. "predicted_answer" - Provide your final answer (A, B, C, or D) based on your "reasoning".
 3. "self_confidence" - Estimate your self-confidence (how likely you think your answer is correct) ∈ [0.0, 1.0].
 4. "internal_confidence" - Estimate your internal confidence (based on reasoning clarity and certainty) ∈ [0.0, 1.0].
 5. "confidence_distribution" - Provide your confidence distribution over choices A–D as JSON (e.g. {{"A": 0.25, "B": 0.25, "C": 0.25, "D": 0.25}}).
@@ -58,8 +59,9 @@ Return only a JSON with the following fields and corresponding data types:
     def call_api(p):
         try:
             response = client.chat.completions.create(
-                model=MODEL,
+                model=MODEL_LOCAL,
                 messages=[
+                    {"role": "system", "content": "You are a PhD-level mathematician."},
                     {"role": "user", "content": p}
                 ],
             )
