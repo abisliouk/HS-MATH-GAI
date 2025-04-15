@@ -17,7 +17,7 @@ INTERNAL_BASED_CONFIDENCE = "internal_based_confidence"
 # Configuration
 MODEL_FREE = "gpt-3.5-turbo"
 MODEL_LOCAL = "Qwen-7B-Chat"
-NUM_SAMPLES = 3 # For processing only a few samples instead of the entire dataset
+NUM_SAMPLES = None # For processing only a few samples instead of the entire dataset
 INPUT_PATH = "data/math_translated_scored.json"
 OUTPUT_PATH = "outputs/prediction_with_uncertainties.json"
 
@@ -25,7 +25,8 @@ client = openai.OpenAI(api_key=PREMIUM_API_KEY, base_url="http://10.227.119.44:8
 
 # Load dataset
 with open(INPUT_PATH, "r") as f:
-    dataset = json.load(f)[:NUM_SAMPLES]
+    all_data = json.load(f)
+    dataset = all_data if NUM_SAMPLES is None else all_data[:NUM_SAMPLES]
 
 results = []
 
