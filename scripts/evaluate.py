@@ -18,7 +18,7 @@ INTERNAL_BASED_CONFIDENCE = "internal_based_confidence"
 MODEL_FREE = "gpt-3.5-turbo"
 MODEL_LOCAL = "Qwen-7B-Chat"
 NUM_SAMPLES = None # For processing only a few samples instead of the entire dataset
-INPUT_PATH = "data/math_translated_scored.json"
+INPUT_PATH = "data/reformatted_augmented_data.json"
 OUTPUT_PATH = "outputs/prediction_with_uncertainties.json"
 
 client = openai.OpenAI(api_key=PREMIUM_API_KEY, base_url="http://10.227.119.44:8000/v1")
@@ -139,8 +139,6 @@ Requirements:
     Path(OUTPUT_PATH).parent.mkdir(parents=True, exist_ok=True)
     with open(OUTPUT_PATH, "w") as f:
         json.dump(results, f, indent=2)
-
-    time.sleep(1.0)
 
 # Final save
 with open(OUTPUT_PATH, "w") as f:
