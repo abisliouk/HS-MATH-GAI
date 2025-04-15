@@ -1,0 +1,22 @@
+[
+  {
+    "confidence_bin": "0.5-0.6",
+    "num_samples": 4,
+    "accuracy": 0.0
+  },
+  {
+    "confidence_bin": "0.6-0.7",
+    "num_samples": 23,
+    "accuracy": 0.174
+  },
+  {
+    "confidence_bin": "0.8-0.9",
+    "num_samples": 125,
+    "accuracy": 0.344
+  },
+  {
+    "confidence_bin": "0.9-1.0",
+    "num_samples": 62,
+    "accuracy": 0.323
+  }
+]
