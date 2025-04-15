@@ -1,11 +1,11 @@
 import openai
 import json
 import time
-import os
 from pathlib import Path
 from uuid import uuid4
 import numpy as np
 from collections import defaultdict
+import re
 
 from const import PREMIUM_API_KEY
 
@@ -29,31 +29,62 @@ with open(INPUT_PATH, "r") as f:
 
 results = []
 
+def safe_parse_json(raw_response, idx=None):
+    try:
+        # Remove code fencing
+        cleaned = raw_response.strip()
+        if cleaned.startswith("```json"):
+            cleaned = cleaned[7:]
+        elif cleaned.startswith("```"):
+            cleaned = cleaned[3:]
+        if cleaned.endswith("```"):
+            cleaned = cleaned[:-3]
+        cleaned = cleaned.strip()
+
+        # Fix smart quotes or special characters
+        cleaned = cleaned.replace("“", '"').replace("”", '"').replace("‘", "'").replace("’", "'")
+
+        # Try parsing normally
+        parsed = json.loads(cleaned)
+        if isinstance(parsed, dict):
+            return parsed
+
+    except Exception as e:
+        if idx is not None:
+            print(f"[Warning @ idx={idx}]: Failed to parse JSON. Raw output:\n{raw_response}")
+        return None
+
+
+
 for idx, item in enumerate(dataset):
     prompt = f"""
-You are a careful math tutor. Solve the following high school math problem step-by-step providing the following:
-1. "reasoning" - Explain your solution step by step.
-2. "predicted_answer" - Provide your final answer (A, B, C, or D) based on your "reasoning".
-3. "self_confidence" - Estimate your self-confidence (how likely you think your answer is correct) ∈ [0.0, 1.0].
-4. "internal_confidence" - Estimate your internal confidence (based on reasoning clarity and certainty) ∈ [0.0, 1.0].
-5. "confidence_distribution" - Provide your confidence distribution over choices A–D as JSON (e.g. {{"A": 0.25, "B": 0.25, "C": 0.25, "D": 0.25}}).
+You are a careful math tutor. Here is the high school math problem: {item['question_en']}.
 
-Problem:
-{item['question_en']}
+Respond with **only valid JSON** using the following format, do not include explanations, markdown or extra text:
 
-Return only a JSON with the following fields and corresponding data types:
 {{
-  "reasoning": string,
-  "predicted_answer": enum["A", "B", "C", "D"],
+  "predicted_answer": "Your answer here (A, B, C, or D)",
   "self_confidence": float ∈ [0.0, 1.0],
   "internal_confidence": float ∈ [0.0, 1.0],
   "confidence_distribution": {{
-        "A": float ∈ [0.0, 1.0],
-        "B": float ∈ [0.0, 1.0],
-        "C": float ∈ [0.0, 1.0],
-        "D": float ∈ [0.0, 1.0]
-    }}
+    "A": float ∈ [0.0, 1.0],
+    "B": float ∈ [0.0, 1.0],
+    "C": float ∈ [0.0, 1.0],
+    "D": float ∈ [0.0, 1.0]
+  }}
 }}
+
+Where:
+1. "predicted_answer" - your final answer (A, B, C, or D).
+2. "self_confidence" - Estimation of your self-confidence (how likely you think your answer is correct).
+3. "internal_confidence" - Estimation of your internal confidence (based on reasoning clarity and certainty).
+4. "confidence_distribution" - your confidence distribution over choices A–D.
+
+Requirements:
+- Your answer must be valid JSON.
+- Make sure the confidence values sum to 1 in "confidence_distribution".
+- Do not copy the example — fill the values based on your actual solution process.
+- Only include the JSON object, with no additional comments or markdown.
 """
 
     def call_api(p):
@@ -61,7 +92,7 @@ Return only a JSON with the following fields and corresponding data types:
             response = client.chat.completions.create(
                 model=MODEL_LOCAL,
                 messages=[
-                    {"role": "system", "content": "You are a PhD-level mathematician."},
+                    {"role": "system", "content": "You are a PhD-level mathematician. Return only valid JSON without any explanations, markdown or extra text."},
                     {"role": "user", "content": p}
                 ],
             )
@@ -75,23 +106,16 @@ Return only a JSON with the following fields and corresponding data types:
     if not raw_response:
         continue
 
-    try:
-        parsed = json.loads(raw_response)
-    except Exception as parse_err:
-        parsed = {
-            "reasoning": raw_response,
-            "predicted_answer": None,
-            "self_confidence": 0.0,
-            "internal_confidence": 0.0,
-            "confidence_distribution": {},
-            "parse_error": str(parse_err)
-        }
+    parsed = safe_parse_json(raw_response, idx=idx)
+    if parsed is None:
+        print(f"[Warning @ idx={idx}]: Failed to parse JSON.")
+        continue
 
     predicted = parsed.get("predicted_answer")
     self_conf = float(parsed.get("self_confidence", 0.0))
     internal_conf = float(parsed.get("internal_confidence", 0.0))
     dist = parsed.get("confidence_distribution", {})
-    logit_based = max(dist.values()) if dist else 0.0
+    logit_based = dist.get(predicted, 0.0)
 
     # Final output
     results.append({
@@ -99,7 +123,6 @@ Return only a JSON with the following fields and corresponding data types:
         "question": item["question"],
         "expected_answer": item["answer"],
         "model_response": {
-            "reasoning": parsed.get("reasoning", ""),
             "predicted_answer": predicted,
             "confidence": {
                 SELF_EVAL_CONFIDENCE: round(self_conf, 3),

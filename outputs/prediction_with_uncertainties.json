@@ -1,56 +1,53 @@
 [
   {
-    "id": "8f4b23c2-0437-4b25-ac7f-2da2198e238e",
+    "id": "caf21340-e24c-4665-9f0b-312531fd77af",
     "question": "1. \uff085 \u5206) \u5df2\u77e5\u96c6\u5408 $A=\\{x \\in R|| x \\mid \\leqslant 2\\}\\}, B=\\{x \\in Z \\mid \\sqrt{x} \\leqslant 4\\}$, \u5219 $A \\cap B=(\\quad$ \uff09\nA. $(0,2)$\nB. $[0,2]$\nC. $\\{0,2\\}$\nD. $\\{0,1,2\\}$\n",
     "expected_answer": [
       "D"
     ],
     "model_response": {
-      "reasoning": "{\n  \"reasoning\": \"For set $A=\\{x \\in \\mathbb{R} | x \\leqslant 2\\}$, the solution is all real numbers less than or equal to 2. For set $B=\\{x \\in \\mathbb{Z} | \\sqrt{x} \\leqslant 4\\}$, the solution is all integers such that the square root of the integer is less than or equal to 4. Since the square root of an integer is also an integer, the integers that satisfy this condition are 0, 1, 2, 3, and 4. The intersection of sets A and B will be all the numbers that are both less than or equal to 2 and integers less than or equal to 4, which are 0, 1, and 2.\",\n  \"predicted_answer\": \"D\",\n  \"self_confidence\": 0.9,\n  \"internal_confidence\": 0.9,\n  \"confidence_distribution\": {\n        \"A\": 0.1,\n        \"B\": 0.1,\n        \"C\": 0.0,\n        \"D\": 0.8\n    }\n}",
-      "predicted_answer": null,
+      "predicted_answer": "C",
       "confidence": {
-        "self_eval_confidence": 0.0,
-        "logit_based_confidence": 0.0,
-        "internal_based_confidence": 0.0
+        "self_eval_confidence": 0.9,
+        "logit_based_confidence": 0.9,
+        "internal_based_confidence": 0.8
       }
     },
-    "raw_text": "{\n  \"reasoning\": \"For set $A=\\{x \\in \\mathbb{R} | x \\leqslant 2\\}$, the solution is all real numbers less than or equal to 2. For set $B=\\{x \\in \\mathbb{Z} | \\sqrt{x} \\leqslant 4\\}$, the solution is all integers such that the square root of the integer is less than or equal to 4. Since the square root of an integer is also an integer, the integers that satisfy this condition are 0, 1, 2, 3, and 4. The intersection of sets A and B will be all the numbers that are both less than or equal to 2 and integers less than or equal to 4, which are 0, 1, and 2.\",\n  \"predicted_answer\": \"D\",\n  \"self_confidence\": 0.9,\n  \"internal_confidence\": 0.9,\n  \"confidence_distribution\": {\n        \"A\": 0.1,\n        \"B\": 0.1,\n        \"C\": 0.0,\n        \"D\": 0.8\n    }\n}",
-    "timestamp": 1744663893.8549771
+    "raw_text": "{\n  \"predicted_answer\": \"C\",\n  \"self_confidence\": 0.9,\n  \"internal_confidence\": 0.8,\n  \"confidence_distribution\": {\n    \"A\": 0.0,\n    \"B\": 0.0,\n    \"C\": 0.9,\n    \"D\": 0.1\n  }\n}",
+    "timestamp": 1744734399.9776409
   },
   {
-    "id": "13bea929-e238-42b1-84d5-6af8af3bdafa",
+    "id": "0478edc2-402a-4400-b732-f14cc9be0982",
     "question": "2. (5 \u5206) \u5df2\u77e5\u590d\u6570 $z=\\frac{\\sqrt{3}+i}{(1-\\sqrt{3} i)^{2}}, \\bar{z}$ \u662f $z$ \u7684\u5171\u8f6d\u590d\u6570, \u5219 $z\\cdot\bar{z}=(\\quad)$\nA. $\\frac{1}{4}$\nB. $\\frac{1}{2}$\nC. 1\nD. 2\n",
     "expected_answer": [
       "A"
     ],
     "model_response": {
-      "reasoning": "First, let's find the conjugate of the complex number z. The conjugate of z is obtained by changing the sign of the imaginary part, so the conjugate of z is z conjugate = (sqrt(3) - i) / (1 + sqrt(3)i)^2. Next, we multiply z by its conjugate to find z*conjugate. After the multiplication and simplification, we get z*conjugate = 1. Therefore, the answer is C. 1.",
-      "predicted_answer": "C",
+      "predicted_answer": "D",
       "confidence": {
         "self_eval_confidence": 0.9,
-        "logit_based_confidence": 0.9,
-        "internal_based_confidence": 0.9
+        "logit_based_confidence": 0.7,
+        "internal_based_confidence": 0.8
       }
     },
-    "raw_text": "{\n  \"reasoning\": \"First, let's find the conjugate of the complex number z. The conjugate of z is obtained by changing the sign of the imaginary part, so the conjugate of z is z conjugate = (sqrt(3) - i) / (1 + sqrt(3)i)^2. Next, we multiply z by its conjugate to find z*conjugate. After the multiplication and simplification, we get z*conjugate = 1. Therefore, the answer is C. 1.\",\n  \"predicted_answer\": \"C\",\n  \"self_confidence\": 0.9,\n  \"internal_confidence\": 0.9,\n  \"confidence_distribution\": {\n        \"A\": 0.05,\n        \"B\": 0.05,\n        \"C\": 0.9,\n        \"D\": 0.0\n    }\n}",
-    "timestamp": 1744663897.602151
+    "raw_text": "{\n  \"predicted_answer\": \"D\",\n  \"self_confidence\": 0.9,\n  \"internal_confidence\": 0.8,\n  \"confidence_distribution\": {\n    \"A\": 0.1,\n    \"B\": 0.1,\n    \"C\": 0.1,\n    \"D\": 0.7\n  }\n}",
+    "timestamp": 1744734404.536322
   },
   {
-    "id": "f7854360-6b14-4f15-9de5-222a83410ed7",
+    "id": "9235c439-e18c-43d3-a843-41a055da6013",
     "question": "3. (5 \u5206) \u66f2\u7ebf $y=\\frac{x}{x+2}$ \u5728\u70b9 $(-1,-1)$ \u5904\u7684\u5207\u7ebf\u65b9\u7a0b\u4e3a\uff08 $\uff09$\nA. $y=2 x+1$\nB. $y=2 x-1$\nC. $y=-2 x-3$\nD. $y=-2 x-2$\n",
     "expected_answer": [
       "A"
     ],
     "model_response": {
-      "reasoning": "To find the equation of the tangent line at the point (-1, -1), we need to find the slope of the curve at that point. We can do this by finding the derivative of the curve y = x / (x + 2) and then substitute x = -1 into the derivative. The derivative of y with respect to x is y' = (1*(x+2) - x(1))/(x+2)^2. Substituting x = -1 into the derivative gives us the slope of the curve at the point (-1, -1) which is 2. Therefore, the equation of the tangent line can be written in point-slope form as y + 1 = 2(x + 1), simplifying gives y = 2x + 1.",
       "predicted_answer": "A",
       "confidence": {
         "self_eval_confidence": 0.9,
-        "logit_based_confidence": 0.9,
-        "internal_based_confidence": 0.9
+        "logit_based_confidence": 0.7,
+        "internal_based_confidence": 0.8
       }
     },
-    "raw_text": "{\n  \"reasoning\": \"To find the equation of the tangent line at the point (-1, -1), we need to find the slope of the curve at that point. We can do this by finding the derivative of the curve y = x / (x + 2) and then substitute x = -1 into the derivative. The derivative of y with respect to x is y' = (1*(x+2) - x(1))/(x+2)^2. Substituting x = -1 into the derivative gives us the slope of the curve at the point (-1, -1) which is 2. Therefore, the equation of the tangent line can be written in point-slope form as y + 1 = 2(x + 1), simplifying gives y = 2x + 1.\",\n  \"predicted_answer\": \"A\",\n  \"self_confidence\": 0.9,\n  \"internal_confidence\": 0.9,\n  \"confidence_distribution\": {\n        \"A\": 0.9,\n        \"B\": 0.1,\n        \"C\": 0.0,\n        \"D\": 0.0\n    }\n}",
-    "timestamp": 1744663901.1203341
+    "raw_text": "{\n  \"predicted_answer\": \"A\",\n  \"self_confidence\": 0.9,\n  \"internal_confidence\": 0.8,\n  \"confidence_distribution\": {\n    \"A\": 0.7,\n    \"B\": 0.2,\n    \"C\": 0.1,\n    \"D\": 0.0\n  }\n}",
+    "timestamp": 1744734409.032172
   }
 ]
