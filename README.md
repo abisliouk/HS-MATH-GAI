@@ -1,137 +1,153 @@
 # HS-MATH-GAI: Evaluating and Enhancing High School-Level Mathematical Reasoning in LLMs
 
-## Project Summary
-
-This project introduces **HS-MATH-GAI**, a framework to systematically evaluate and improve the **symbolic mathematical reasoning** abilities of Large Language Models (LLMs) on **high school-level math problems**.
-
-The project focuses on three main components:
-1. **Benchmark Construction** – Developing a symbolic math benchmark aligned with high school curricula.
-2. **Uncertainty Quantification** – Measuring confidence and variability in LLM-generated reasoning chains.
-3. **Reasoning Workflow Optimization** – Enhancing reasoning robustness via purification and step-wise refinement techniques.
-
-## 🔍 Math Reasoning Evaluation with Uncertainty Quantification (UQ)
-
-This project implements an automated pipeline for evaluating high school math reasoning performance using OpenAI's GPT models. It also incorporates **four Uncertainty Quantification (UQ)** methods to better estimate the model’s confidence and reliability on each problem.
-
----
-## 📂 Project Structure
-
-- The `data/` directory contains the input dataset file `math_translated_scored.json`, which holds English-translated math problems along with their ground truth answers.
-
-- The `scripts/` directory includes the main evaluation script `evaluate.py`. This script queries the OpenAI API to solve problems and compute multiple uncertainty quantification (UQ) scores.
-
-- The `outputs/` directory is used to store the evaluation results. Specifically, the file `prediction_with_uncertainties.json` contains the model responses, predicted answers, and four types of UQ confidence scores for each evaluated math problem.
-
-- The `README.md` file you're reading now provides setup instructions, usage, and project documentation.
-
-## 🚀 Features
-
-- Automatically solves math problems with GPT-3.5 Turbo.
-- Returns:
-  - Step-by-step reasoning
-  - Final answer (A/B/C/D)
-  - Confidence estimates from four UQ methods:
-    - ✅ Self-Evaluation (verbal score from model)
-    - 🔢 Logit-Based (via softmax-like distribution over answers)
-    - 🧠 Internal-Based (reasoning clarity, approximated)
-- Saves structured results to a JSON file.
-- Designed for reproducible experimentation.
+This project evaluates AI-generated answers to high school math problems using **GPT models** and computes **uncertainty quantification (UQ)** metrics. It supports **both original and augmented datasets**, and computes confidence-accuracy reliability tables.
 
 ---
 
-## ⚙️ Setup Instructions
+## 📁 Project Structure
 
-### 1. Clone the Repository
-
-```bash
-git clone git@github.com:abisliouk/EEL6935-HS-MATH-GAI.git
-cd EEL6935-HS-MATH-GAI
+```
+.
+├── data/                          # Input JSON datasets (original and augmented)
+│   ├── reformatted_augmented_data.json
+│   └── math_translated_scored.json
+├── outputs/                       # Stores raw predictions + confidence-accuracy tables
+│   ├── prediction_with_uncertainties.json
+│   ├── confidence_accuracy_self_eval.json
+│   ├── confidence_accuracy_logit.json
+│   └── confidence_accuracy_internal.json
+├── scripts/
+│   ├── evaluate_original.py       # Inference on original math problems
+│   ├── evaluate_augmented.py      # Inference on augmented math problems
+│   ├── utils.py                   # Prompting, parsing, API and UQ evaluation functions
+│   ├── const.py                   # Constants and config
+│   └── keys.py                    # Contains your `PREMIUM_API_KEY`
 ```
 
-### 2. Create Python Environment
+---
 
-Make sure you have Python 3.8+ installed.
+## ✅ Setup
+
+1. Install dependencies:
 
 ```bash
-pip install openai
+pip install openai numpy
 ```
 
-### 3. Set OpenAI API Key
+2. Create `scripts/keys.py`:
 
-To use the OpenAI API, you need an API key from your account.
-
-1. Go to [https://platform.openai.com/account/api-keys](https://platform.openai.com/account/api-keys).
-2. Click **Create new secret key**.
-3. Copy the generated key.
-
-Then, set the key in your terminal session using:
-
-```bash
-export OPENAI_API_KEY="sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+```python
+PREMIUM_API_KEY = "sk-..."  # Your actual key here
 ```
 
-### 4. 🧪 Usage
+3. Configure `const.py` for:
+   - API model: `MODEL_LOCAL` (e.g., `Qwen-7B-Chat`)
+   - Input/output paths:
+     - `INPUT_PATH_ORIGINAL = "data/math_translated_scored.json"`
+     - `INPUT_PATH_AUGMENTED = "data/reformatted_augmented_data.json"`
+     - `OUTPUT_DIR = "outputs"`
 
-To run the uncertainty-aware math problem evaluation:
+---
+
+## 🚀 Usage
+
+### 1. Evaluate Original Math Problems
+
+Run the following:
 
 ```bash
-python scripts/evaluate.py
+python scripts/evaluate_original.py
 ```
 
 This will:
 
-- Load `data/math_translated_scored.json`.
-- For each of the first `NUM_SAMPLES` math problems:
-  - Prompt GPT-3.5 to:
-    - Solve the problem.
-    - Output structured reasoning, predicted answer, and 3 uncertainty scores:
-      - `self_confidence`
-      - `internal_confidence`
-      - `confidence_distribution` → used to compute `logit_based_confidence`
-  - Store full results in `outputs/prediction_with_uncertainties.json`.
+- Use questions from `data/math_translated_scored.json`
+- Query the model and store structured responses (answer + 3 confidences)
+- Save results to `outputs/prediction_with_uncertainties.json`
+- Generate confidence-accuracy reliability tables:
+  - `confidence_accuracy_self_eval.json`
+  - `confidence_accuracy_logit.json`
+  - `confidence_accuracy_internal.json`
 
 ---
 
-### 📊 Confidence-Accuracy Table (Calibration)
+### 2. Evaluate Augmented Math Problems
 
-After evaluation, the script automatically builds **calibration tables** to quantify how reliable each confidence type is.
+Run:
 
-These tables are saved to:
+```bash
+python scripts/evaluate_augmented.py
+```
 
-- `outputs/confidence_accuracy_self_eval.json`
-- `outputs/confidence_accuracy_logit.json`
-- `outputs/confidence_accuracy_internal.json`
+This will:
 
-Each file includes:
+- Process the three augmented questions from each sample in `reformatted_augmented_data.json`
+- Store each result with fields: `id`, `question_version`, and confidence metrics
+- Save outputs and reliability plots to `outputs/`
+
+---
+
+## 📊 Confidence Types
+
+Each prediction includes:
+
+| Confidence Field            | Description                                                     |
+|----------------------------|-----------------------------------------------------------------|
+| `self_eval_confidence`     | Model's subjective estimate of correctness                      |
+| `logit_based_confidence`   | Probability assigned to the predicted answer                    |
+| `internal_based_confidence`| Confidence based on internal consistency (self-declared)        |
+
+These are used to generate **confidence-accuracy** reliability tables.
+
+---
+
+## 📈 Outputs
+
+Each evaluated entry (original or augmented) looks like:
+
+```json
+{
+  "id": "abc-123",
+  "question": "...",
+  "expected_answer": ["D"],
+  "model_response": {
+    "predicted_answer": "D",
+    "confidence": {
+      "self_eval_confidence": 0.92,
+      "logit_based_confidence": 0.87,
+      "internal_based_confidence": 0.88
+    }
+  },
+  ...
+}
+```
+
+Reliability tables (binned by confidence):
 
 ```json
 [
-  {
-    "confidence_bin": "0.5-0.6",
-    "num_samples": 3,
-    "accuracy": 0.667
-  },
+  {"confidence_bin": "0.8-0.9", "num_samples": 45, "accuracy": 0.844},
   ...
 ]
 ```
 
+---
 
-### 📊 Output Format
-```json
-{
-  "id": "...",
-  "question": "...",
-  "expected_answer": ["D"],
-  "model_response": {
-    "reasoning": "...",
-    "predicted_answer": "D",
-    "confidence": {
-      "self_eval_confidence": 0.87,
-      "logit_based_confidence": 0.9,
-      "internal_based_confidence": 0.85
-    }
-  },
-  "raw_text": "...",
-  "timestamp": 1744131300.123456
-}
-```
+## 📌 Notes
+
+- All prompts are strict JSON-only with clear format expectations
+- Invalid responses are logged and skipped
+- Model's confidence distribution must sum to 1
+- Use `NUM_SAMPLES` in `evaluate_*.py` to limit batch size during testing
+
+---
+
+## 🧠 Authors
+
+Created as part of **EEL6935: Safe Autonomous Systems** coursework.
+
+---
+
+## 🔐 Disclaimer
+
+You must have a valid OpenAI API key and/or access to the local server endpoint to run the scripts.
