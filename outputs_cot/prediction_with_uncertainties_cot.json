@@ -1,0 +1,113 @@
+[
+  {
+    "id": "4c6696e8-194f-441c-8abb-ae3ad8c0914e",
+    "question": "1. (5 points) Given the set $A=\\{x \\in R|| x \\mid \\leqslant 2\\}\\}, B=\\{x \\in Z \\mid \\sqrt{x} \\leqslant 4\\}$, then $A \\cap B=(\\quad$\uff09\nA.$(0,2)$B.$[0,2]$C.$\\{0,2\\}$D.$\\{0,1,2\\}$",
+    "expected_answer": [
+      "D"
+    ],
+    "model_response": {
+      "predicted_answer": "C",
+      "intermediate_confidences": [
+        {
+          "step_number": 1,
+          "self_eval_confidence": 0.6,
+          "logit_based_confidence": 0.3,
+          "internal_based_confidence": 0.7
+        },
+        {
+          "step_number": 2,
+          "self_eval_confidence": 0.8,
+          "logit_based_confidence": 0.3,
+          "internal_based_confidence": 0.9
+        },
+        {
+          "step_number": 3,
+          "self_eval_confidence": 0.9,
+          "logit_based_confidence": 0.1,
+          "internal_based_confidence": 0.95
+        }
+      ],
+      "final_confidence": {
+        "self_eval_confidence": 0.95,
+        "logit_based_confidence": 0.1,
+        "internal_based_confidence": 0.95
+      }
+    },
+    "raw_text": "[JSON_START]\n{\n  \"steps\": [\n    {\n      \"step_number\": 1,\n      \"self_confidence\": 0.6,\n      \"internal_confidence\": 0.7,\n      \"confidence_distribution\": {\n        \"A\": 0.3,\n        \"B\": 0.2,\n        \"C\": 0.3,\n        \"D\": 0.2\n      }\n    },\n    {\n      \"step_number\": 2,\n      \"self_confidence\": 0.8,\n      \"internal_confidence\": 0.9,\n      \"confidence_distribution\": {\n        \"A\": 0.1,\n        \"B\": 0.1,\n        \"C\": 0.3,\n        \"D\": 0.5\n      }\n    },\n    {\n      \"step_number\": 3,\n      \"self_confidence\": 0.9,\n      \"internal_confidence\": 0.95,\n      \"confidence_distribution\": {\n        \"A\": 0.05,\n        \"B\": 0.0,\n        \"C\": 0.1,\n        \"D\": 0.85\n      }\n    }\n  ],\n  \"predicted_answer\": \"C\",\n  \"final_confidence\": {\n    \"self_confidence\": 0.95,\n    \"internal_confidence\": 0.95,\n    \"confidence_distribution\": {\n      \"A\": 0.05,\n      \"B\": 0.0,\n      \"C\": 0.1,\n      \"D\": 0.85\n    }\n  }\n}\n[JSON_END]",
+    "timestamp": 1745007499.4877598
+  },
+  {
+    "id": "1c5ef995-1b4e-468f-b5ce-e4dae7130051",
+    "question": "2. (5 points) Given the complex number $z=\\frac{\\sqrt{3}+i}{(1-\\sqrt{3} i)^{2}}, \\bar{z}$is$z$the conjugated complex number, then$z\\cdot\bar{z}=(\\quad)$A.$\\frac{1}{4}$B.$\\frac{1}{2}$C. 1\nD. 2",
+    "expected_answer": [
+      "A"
+    ],
+    "model_response": {
+      "predicted_answer": "C",
+      "intermediate_confidences": [
+        {
+          "step_number": 1,
+          "self_eval_confidence": 0.7,
+          "logit_based_confidence": 0.3,
+          "internal_based_confidence": 0.8
+        },
+        {
+          "step_number": 2,
+          "self_eval_confidence": 0.9,
+          "logit_based_confidence": 0.1,
+          "internal_based_confidence": 0.9
+        },
+        {
+          "step_number": 3,
+          "self_eval_confidence": 0.95,
+          "logit_based_confidence": 0.1,
+          "internal_based_confidence": 0.95
+        }
+      ],
+      "final_confidence": {
+        "self_eval_confidence": 0.95,
+        "logit_based_confidence": 0.1,
+        "internal_based_confidence": 0.95
+      }
+    },
+    "raw_text": "[JSON_START]\n{\n  \"steps\": [\n    {\n      \"step_number\": 1,\n      \"self_confidence\": 0.7,\n      \"internal_confidence\": 0.8,\n      \"confidence_distribution\": {\n        \"A\": 0.2,\n        \"B\": 0.2,\n        \"C\": 0.3,\n        \"D\": 0.3\n      }\n    },\n    {\n      \"step_number\": 2,\n      \"self_confidence\": 0.9,\n      \"internal_confidence\": 0.9,\n      \"confidence_distribution\": {\n        \"A\": 0.05,\n        \"B\": 0.0,\n        \"C\": 0.1,\n        \"D\": 0.85\n      }\n    },\n    {\n      \"step_number\": 3,\n      \"self_confidence\": 0.95,\n      \"internal_confidence\": 0.95,\n      \"confidence_distribution\": {\n        \"A\": 0.05,\n        \"B\": 0.0,\n        \"C\": 0.1,\n        \"D\": 0.85\n      }\n    }\n  ],\n  \"predicted_answer\": \"C\",\n  \"final_confidence\": {\n    \"self_confidence\": 0.95,\n    \"internal_confidence\": 0.95,\n    \"confidence_distribution\": {\n      \"A\": 0.05,\n      \"B\": 0.0,\n      \"C\": 0.1,\n      \"D\": 0.85\n    }\n  }\n}\n[JSON_END]",
+    "timestamp": 1745007511.004054
+  },
+  {
+    "id": "41e43957-4371-42ea-ae59-98be469253a7",
+    "question": "3. (5 points) Curve$y=\\frac{x}{x+2}$At the point $(-1,-1)$The tangent equation at is ($\uff09$A.$y=2 x+1$B.$y=2 x-1$C.$y=-2 x-3$D.$y=-2 x-2$",
+    "expected_answer": [
+      "A"
+    ],
+    "model_response": {
+      "predicted_answer": "C",
+      "intermediate_confidences": [
+        {
+          "step_number": 1,
+          "self_eval_confidence": 0.6,
+          "logit_based_confidence": 0.4,
+          "internal_based_confidence": 0.7
+        },
+        {
+          "step_number": 2,
+          "self_eval_confidence": 0.8,
+          "logit_based_confidence": 0.4,
+          "internal_based_confidence": 0.8
+        },
+        {
+          "step_number": 3,
+          "self_eval_confidence": 0.9,
+          "logit_based_confidence": 0.1,
+          "internal_based_confidence": 0.9
+        }
+      ],
+      "final_confidence": {
+        "self_eval_confidence": 0.95,
+        "logit_based_confidence": 0.1,
+        "internal_based_confidence": 0.95
+      }
+    },
+    "raw_text": "[JSON_START]\n{\n  \"steps\": [\n    {\n      \"step_number\": 1,\n      \"self_confidence\": 0.6,\n      \"internal_confidence\": 0.7,\n      \"confidence_distribution\": {\n        \"A\": 0.2,\n        \"B\": 0.2,\n        \"C\": 0.4,\n        \"D\": 0.2\n      }\n    },\n    {\n      \"step_number\": 2,\n      \"self_confidence\": 0.8,\n      \"internal_confidence\": 0.8,\n      \"confidence_distribution\": {\n        \"A\": 0.1,\n        \"B\": 0.1,\n        \"C\": 0.4,\n        \"D\": 0.4\n      }\n    },\n    {\n      \"step_number\": 3,\n      \"self_confidence\": 0.9,\n      \"internal_confidence\": 0.9,\n      \"confidence_distribution\": {\n        \"A\": 0.0,\n        \"B\": 0.0,\n        \"C\": 0.1,\n        \"D\": 0.9\n      }\n    }\n  ],\n  \"predicted_answer\": \"C\",\n  \"final_confidence\": {\n    \"self_confidence\": 0.95,\n    \"internal_confidence\": 0.95,\n    \"confidence_distribution\": {\n      \"A\": 0.05,\n      \"B\": 0.0,\n      \"C\": 0.1,\n      \"D\": 0.85\n    }\n  }\n}\n[JSON_END]",
+    "timestamp": 1745007522.474244
+  }
+]

@@ -1,30 +1,11 @@
-import openai
-import json
-import time
-from pathlib import Path
-from uuid import uuid4
-
-from keys import PREMIUM_API_KEY
-from const import *
-from utils import evaluate_confidence_accuracy
 import re
-
-# Configuration
-NUM_SAMPLES = 3  # Set to an integer for testing on fewer samples. None for all.
-OUTPUT_FILENAME = "prediction_with_uncertainties_cot.json"
-OUTPUT_PATH = f"{OUTPUT_DIR}/{OUTPUT_FILENAME}"
-
-client = openai.OpenAI(api_key=PREMIUM_API_KEY, base_url="http://10.227.119.44:8000/v1")
-
-# Load dataset
-with open(INPUT_PATH_ORIGINAL, "r") as f:
-    all_data = json.load(f)
-    dataset = all_data if NUM_SAMPLES is None else all_data[:NUM_SAMPLES]
-
-results = []
+import numpy as np
+import json
+from pathlib import Path
+from collections import defaultdict
 
 
-def call_api(client, prompt, model, idx=None):
+def call_api_cot(client, prompt, model, idx=None):
     try:
         response = client.chat.completions.create(
             model=model,
@@ -120,63 +101,59 @@ Output the result as ONLY a JSON list using this structure exactly (no explanati
 
 Requirements for the output:
 - Your answer must be ONLY a valid JSON, with no additional explanations, comments or markdown.
-- Do not copy the example — fill the values based on your actual solution process.
+- Do not copy the example JSON — fill the values based on your actual solution process.
 - Do not include anything outside [JSON_START] and [JSON_END].
 """
 
-for idx, item in enumerate(dataset):
-    prompt = get_prompt_cot(item['question_en'])
-    raw_response = call_api(client, prompt, model=MODEL_LOCAL, idx=idx)
+def evaluate_confidence_accuracy_cot(results, confidence_keys, output_dir="outputs"):
+    """
+    Evaluates and saves accuracy bins for final_confidence fields in CoT-style outputs.
 
-    if not raw_response:
-        continue
+    Args:
+        results: List of CoT-format result dictionaries.
+        confidence_keys: List of tuples (nested confidence key path, output filename).
+        output_dir: Directory to save output JSONs.
+    """
+    bins = np.arange(0.0, 1.1, 0.1)
 
-    parsed = safe_parse_cot_json(raw_response, idx=idx)
-    if parsed is None or not isinstance(parsed, dict):
-        print(f"[Warning @ idx={idx}]: Failed to parse JSON.")
-        continue
+    def get_nested_value(d, key_path):
+        """Access nested keys like 'final_confidence.self_eval_confidence' safely."""
+        keys = key_path.split(".")
+        for key in keys:
+            d = d.get(key, {})
+        return d if isinstance(d, (int, float)) else 0.0
 
-    steps = parsed.get("steps", [])
-    final_conf = parsed.get("final_confidence", {})
-    pred = parsed.get("predicted_answer", "")
+    for conf_key, output_file in confidence_keys:
+        bin_counts = defaultdict(int)
+        bin_correct = defaultdict(int)
 
-    results.append({
-        "id": item.get("id", str(uuid4())),
-        "question": item["question_en"],
-        "expected_answer": item["answer"],
-        "model_response": {
-            "predicted_answer": pred,
-            "intermediate_confidences": [
-                {
-                    "step_number": step.get("step_number"),
-                    "self_eval_confidence": step.get("self_confidence", 0.0),
-                    "logit_based_confidence": step.get("confidence_distribution", {}).get(pred, 0.0),
-                    "internal_based_confidence": step.get("internal_confidence", 0.0)
-                } for step in steps
-            ],
-            "final_confidence": {
-                "self_eval_confidence": final_conf.get("self_confidence", 0.0),
-                "logit_based_confidence": final_conf.get("confidence_distribution", {}).get(pred, 0.0),
-                "internal_based_confidence": final_conf.get("internal_confidence", 0.0)
-            }
-        },
-        "raw_text": raw_response,
-        "timestamp": time.time()
-    })
+        for r in results:
+            conf = get_nested_value(r["model_response"], conf_key)
+            correct = r["model_response"]["predicted_answer"] in r["expected_answer"]
 
-    Path(OUTPUT_DIR).mkdir(parents=True, exist_ok=True)
-    with open(OUTPUT_PATH, "w") as f:
-        json.dump(results, f, indent=2)
+            for i in range(len(bins) - 1):
+                if bins[i] <= conf < bins[i + 1] or (conf == 1.0 and bins[i + 1] == 1.0):
+                    bin_key = f"{bins[i]:.1f}-{bins[i+1]:.1f}"
+                    bin_counts[bin_key] += 1
+                    bin_correct[bin_key] += int(correct)
+                    break
 
-# Final save
-with open(OUTPUT_PATH, "w") as f:
-    json.dump(results, f, indent=2)
+        # Format results
+        table = []
+        for bin_key in sorted(bin_counts.keys()):
+            total = bin_counts[bin_key]
+            correct = bin_correct[bin_key]
+            acc = correct / total if total > 0 else 0.0
+            table.append({
+                "confidence_bin": bin_key,
+                "num_samples": total,
+                "accuracy": round(acc, 3)
+            })
 
-# Confidence-Accuracy Evaluation
-confidence_keys = [
-    ("final_confidence.self_eval_confidence", "confidence_accuracy_self_eval_cot.json"),
-    ("final_confidence.logit_based_confidence", "confidence_accuracy_logit_cot.json"),
-    ("final_confidence.internal_based_confidence", "confidence_accuracy_internal_cot.json")
-]
+        # Save
+        Path(output_dir).mkdir(parents=True, exist_ok=True)
+        path = Path(output_dir) / output_file
+        with open(path, "w") as f:
+            json.dump(table, f, indent=2)
 
-evaluate_confidence_accuracy(results, confidence_keys, output_dir=OUTPUT_DIR, confidence_key_path=True)
+        print(f"✅ Saved {conf_key} confidence-accuracy table to: {path}")

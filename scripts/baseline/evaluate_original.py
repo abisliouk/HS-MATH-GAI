@@ -3,9 +3,12 @@ import json
 import time
 from pathlib import Path
 from uuid import uuid4
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
 
-from keys import PREMIUM_API_KEY
-from const import *
+from scripts.keys import PREMIUM_API_KEY
+from scripts.const import OUTPUT_DIR, INPUT_PATH_ORIGINAL, MODEL_LOCAL, SELF_EVAL_CONFIDENCE, LOGIT_BASED_CONFIDENCE, INTERNAL_BASED_CONFIDENCE
 from utils import safe_parse_json, get_prompt, call_api, evaluate_confidence_accuracy
 
 # Configuration
