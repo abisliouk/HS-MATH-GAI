@@ -13,7 +13,7 @@ from scripts.cot.utils import evaluate_confidence_accuracy_cot, get_prompt_cot, 
 
 
 # Configuration
-NUM_SAMPLES = 3  # Set to an integer for testing on fewer samples. None for all.
+NUM_SAMPLES = None  # Set to an integer for testing on fewer samples. None for all.
 OUTPUT_FILENAME = "prediction_with_uncertainties_cot.json"
 OUTPUT_PATH = f"{OUTPUT_DIR_COT}/{OUTPUT_FILENAME}"
 
