@@ -8,7 +8,7 @@ import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
 
 from scripts.keys import PREMIUM_API_KEY
-from scripts.const import OUTPUT_DIR_COT, INPUT_PATH_ORIGINAL, MODEL_LOCAL
+from scripts.const import OUTPUT_DIR_COT, INPUT_PATH_ORIGINAL, MODEL_GPT_3_5
 from scripts.cot.utils import evaluate_confidence_accuracy_cot, get_prompt_cot, call_api_cot, safe_parse_cot_json
 
 
@@ -28,7 +28,7 @@ results = []
 
 for idx, item in enumerate(dataset):
     prompt = get_prompt_cot(item['question_en'])
-    raw_response = call_api_cot(client, prompt, model=MODEL_LOCAL, idx=idx)
+    raw_response = call_api_cot(client, prompt, model=MODEL_GPT_3_5, idx=idx)
 
     if not raw_response:
         continue

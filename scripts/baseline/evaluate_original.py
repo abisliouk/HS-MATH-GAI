@@ -8,7 +8,7 @@ import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
 
 from scripts.keys import PREMIUM_API_KEY
-from scripts.const import OUTPUT_DIR, INPUT_PATH_ORIGINAL, MODEL_LOCAL, SELF_EVAL_CONFIDENCE, LOGIT_BASED_CONFIDENCE, INTERNAL_BASED_CONFIDENCE
+from scripts.const import OUTPUT_DIR, INPUT_PATH_ORIGINAL, MODEL_GPT_3_5, SELF_EVAL_CONFIDENCE, LOGIT_BASED_CONFIDENCE, INTERNAL_BASED_CONFIDENCE
 from utils import safe_parse_json, get_prompt, call_api, evaluate_confidence_accuracy
 
 # Configuration
@@ -29,7 +29,7 @@ results = []
 # Inference loop
 for idx, item in enumerate(dataset):
     prompt = get_prompt(item['question_en'])
-    raw_response = call_api(client, prompt, model=MODEL_LOCAL, idx=idx)
+    raw_response = call_api(client, prompt, model=MODEL_GPT_3_5, idx=idx)
 
     if not raw_response:
         continue
