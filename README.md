@@ -1,6 +1,12 @@
-# HS-MATH-GAI: Evaluating and Enhancing High School-Level Mathematical Reasoning in LLMs
 
-This project evaluates AI-generated answers to high school math problems using **GPT models** and computes **uncertainty quantification (UQ)** metrics. It supports confidence-accuracy reliability tables.
+# HS-MATH-LLM: Evaluating and Enhancing High School-Level Mathematical Reasoning in LLMs
+
+[![Python Version](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
+This project evaluates the ability of large language models (LLMs) to solve high school-level math problems. It focuses on reasoning accuracy and confidence calibration using both single-step (baseline) and step-by-step (Chain-of-Thought, CoT) prompting.
+
+For each model response, the system extracts structured outputs including predicted answers and multiple confidence estimates. These values quantify how certain the model is in its answers and are binned into reliability tables to evaluate calibration — i.e., whether higher confidence corresponds to higher accuracy.
 
 ---
 
@@ -8,47 +14,75 @@ This project evaluates AI-generated answers to high school math problems using *
 
 ```
 .
-├── data/                          # Input JSON datasets (original and augmented)
-│   ├── reformatted_augmented_data.json
-│   └── math_translated_scored.json
-├── outputs/                       # Stores raw predictions + confidence-accuracy tables
+├── data/                          # Input datasets (original and reformatted)
+│   ├── original_dataset.json
+│   └── reformatted_augmented_dataset.json
+│
+├── outputs_baseline/             # Results from baseline evaluation
 │   ├── prediction_with_uncertainties.json
 │   ├── confidence_accuracy_self_eval.json
 │   ├── confidence_accuracy_logit.json
 │   └── confidence_accuracy_internal.json
+│
+├── outputs_cot/                  # Results from Chain-of-Thought evaluation
+│   ├── prediction_with_uncertainties_cot.json
+│   ├── confidence_accuracy_self_eval_cot.json
+│   ├── confidence_accuracy_logit_cot.json
+│   └── confidence_accuracy_internal_cot.json
+│
 ├── scripts/
-│   ├── evaluate_original.py       # Inference on original math problems
-│   ├── evaluate_augmented.py      # Inference on augmented math problems
-│   ├── utils.py                   # Prompting, parsing, API and UQ evaluation functions
-│   ├── const.py                   # Constants and configuration paths
-│   └── cot/                       # Chain-of-Thought (CoT) evaluation logic
-│       ├── evaluate_original_cot.py
-│       └── utils.py
+│   ├── baseline/
+│   │   ├── evaluate_original.py       # Baseline evaluation script
+│   │   └── utils.py                   # Baseline utils (prompting, parsing, evaluation)
+│   │
+│   ├── cot/
+│   │   ├── evaluate_original_cot.py   # CoT evaluation script
+│   │   └── utils.py                   # CoT-specific prompt and evaluation utilities
+│   │
+│   ├── const.py                       # Shared constants and configuration
+│   ├── keys.py                        # Contains your PREMIUM_API_KEY
 ```
 
 ---
 
 ## ✅ Setup
 
-1. Install dependencies:
+To get started, follow these steps:
+
+1. **Install dependencies**
+
+Make sure you have Python 3.8+ and run:
 
 ```bash
 pip install openai numpy
 ```
 
-2. Create `scripts/keys.py`:
+2. **Add your API key**
+
+Create a file at `scripts/keys.py` containing:
 
 ```python
-PREMIUM_API_KEY = "sk-..."  # Your actual key here
+PREMIUM_API_KEY = "sk-..."  # Replace with your actual API key
 ```
 
-3. Configure `const.py` for:
-   - API model: `MODEL_GPT_3_5` (e.g., `gpt-3.5-turbo`)
-   - Input/output paths (see `scripts/const.py`):
-     - `INPUT_PATH_ORIGINAL = "data/original_dataset.json"`
-     - `INPUT_PATH_AUGMENTED = "data/reformatted_augmented_dataset.json"`
-     - `OUTPUT_DIR_BASELINE = "outputs_baseline"`
-     - `OUTPUT_DIR_COT = "outputs_cot"`
+3. **Check configuration**
+
+Open `scripts/const.py` and verify or update the following paths and model name:
+
+```python
+MODEL_GPT_3_5 = "gpt-3.5-turbo"
+INPUT_PATH_ORIGINAL = "data/original_dataset.json"
+INPUT_PATH_AUGMENTED = "data/reformatted_augmented_dataset.json"
+OUTPUT_DIR_BASELINE = "outputs_baseline"
+OUTPUT_DIR_COT = "outputs_cot"
+```
+
+4. **(Optional) Limit number of samples**
+
+To test on a subset of data, set `NUM_SAMPLES = <integer>` at the top of:
+
+- `scripts/baseline/evaluate_original.py`
+- `scripts/cot/evaluate_original_cot.py`
 
 ---
 
@@ -216,21 +250,30 @@ Use these tables to analyze how well model confidence correlates with actual cor
 
 ---
 
-## 📌 Notes
+---
 
-- All prompts are strict JSON-only with clear format expectations
-- Invalid responses are logged and skipped
-- Model's confidence distribution must sum to 1
-- Use `NUM_SAMPLES` in `evaluate_*.py` to limit batch size during testing
+## 📌 Additional Notes
+
+- Prompts strictly enforce valid JSON-only output.
+- Invalid or unparsable responses are logged and skipped during evaluation.
+- The `"confidence_distribution"` field must sum to 1.
+- Intermediate results are saved incrementally to prevent data loss on interruption.
+- Set `NUM_SAMPLES` in each evaluation script to quickly test on smaller subsets.
 
 ---
 
 ## 🧠 Authors
 
-Created as part of **EEL6935: Safe Autonomous Systems** coursework.
+Created as part of **EEL6935: Safe Autonomous Systems** coursework at UNiversity of Florida.
 
 ---
 
 ## 🔐 Disclaimer
 
 You must have a valid OpenAI API key and/or access to the local server endpoint to run the scripts.
+
+---
+
+## 📄 License
+
+This project is licensed under the [MIT License](https://opensource.org/licenses/MIT).
