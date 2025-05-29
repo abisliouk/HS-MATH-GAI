@@ -264,7 +264,7 @@ Use these tables to analyze how well model confidence correlates with actual cor
 
 ## 🧠 Authors
 
-Created as part of **EEL6935: Safe Autonomous Systems** coursework at UNiversity of Florida.
+Created as part of **EEL6935: Safe Autonomous Systems** coursework at University of Florida.
 
 ---
 
